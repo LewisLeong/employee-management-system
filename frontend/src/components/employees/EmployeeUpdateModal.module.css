@@ -1,0 +1,129 @@
+.modalBackdrop { position: fixed; inset: 0; display: grid; place-items: center; padding: 24px; background: rgba(15, 23, 42, 0.45); }
+.modal { width: min(560px, 100%); border-radius: 28px; background: white; padding: 24px; box-shadow: 0 32px 80px rgba(15, 23, 42, 0.24); }
+.modalHeader { display: flex; justify-content: space-between; gap: 16px; align-items: start; margin-bottom: 24px; }
+.modalEyebrow { text-transform: uppercase; letter-spacing: 0.16em; font-size: 0.72rem; color: #64748b; margin-bottom: 8px; }
+.modal h2 { color: #0f172a; }
+.modalForm { display: grid; gap: 16px; }
+.field { display: grid; gap: 8px; color: #0f172a; }
+.field input { border: 1px solid rgba(148, 163, 184, 0.35); border-radius: 14px; padding: 12px 14px; font: inherit; }
+.switchRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 0;
+  border-top: 1px solid rgba(148, 163, 184, 0.18);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+}
+.switchLabel,
+.switchState {
+  color: #0f172a;
+  font-size: 0.95rem;
+}
+.switchGroup {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.switchState {
+  text-align: right;
+}
+.switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+}
+.switch input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.switchTrack {
+  width: 54px;
+  height: 32px;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.3);
+  padding: 4px;
+  transition: background-color 150ms ease;
+}
+.switchThumb {
+  display: block;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: white;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.2);
+  transform: translateX(0);
+  transition: transform 150ms ease;
+}
+.switch input:checked + .switchTrack {
+  background: #0f172a;
+}
+.switch input:checked + .switchTrack .switchThumb {
+  transform: translateX(22px);
+}
+.switch input:focus-visible + .switchTrack {
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.14);
+}
+.errorText { color: #b91c1c; }
+.modalActions { display: flex; justify-content: end; gap: 12px; }
+.primaryButton, .secondaryButton, .iconButton { border: 0; border-radius: 999px; font: inherit; cursor: pointer; }
+.primaryButton { background: #0f172a; color: white; padding: 10px 16px; }
+.secondaryButton { background: rgba(148, 163, 184, 0.16); color: #0f172a; padding: 10px 16px; }
+.iconButton {
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(148, 163, 184, 0.16);
+  color: #0f172a;
+  padding: 0;
+  line-height: 1;
+  font-size: 1.4rem;
+}
+.primaryButton:disabled, .secondaryButton:disabled { opacity: 0.6; cursor: not-allowed; }
+
+@media (max-width: 640px) {
+  .modalBackdrop {
+    padding: 12px;
+    place-items: end center;
+  }
+
+  .modal {
+    width: 100%;
+    border-radius: 22px 22px 0 0;
+    padding: 18px;
+    max-height: 92vh;
+    overflow-y: auto;
+  }
+
+  .modalHeader {
+    align-items: start;
+    margin-bottom: 18px;
+  }
+
+  .switchRow {
+    gap: 10px;
+  }
+
+  .switchGroup {
+    gap: 8px;
+  }
+
+  .modalActions {
+    flex-direction: column-reverse;
+  }
+
+  .primaryButton,
+  .secondaryButton,
+  .iconButton {
+    width: 100%;
+  }
+
+  .iconButton {
+    width: 44px;
+    align-self: end;
+  }
+}

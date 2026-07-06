@@ -1,0 +1,104 @@
+.pagination {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.pageControls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.pageSizeWrap {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.pageSizeLabel {
+  font-size: 0.85rem;
+  color: #475569;
+}
+
+.pageSizeSelect {
+  min-height: 42px;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  background: rgba(255, 255, 255, 0.88);
+  color: #0f172a;
+  padding: 0 14px;
+  font: inherit;
+}
+
+.pageList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.navButton,
+.pageButton {
+  min-height: 42px;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  background: rgba(255, 255, 255, 0.88);
+  color: #0f172a;
+  padding: 0 14px;
+  font: inherit;
+}
+
+.navButton:disabled,
+.pageButton:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.pageButton {
+  min-width: 42px;
+  padding-inline: 12px;
+}
+
+.active {
+  background: #0f172a;
+  border-color: #0f172a;
+  color: white;
+}
+
+.ellipsis {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 26px;
+  color: #64748b;
+}
+
+@media (max-width: 640px) {
+  .pagination {
+    gap: 12px;
+  }
+
+  .pageControls,
+  .pageList {
+    justify-content: flex-start;
+  }
+
+  .pageSizeWrap {
+    justify-content: space-between;
+  }
+
+  .navButton,
+  .pageButton {
+    min-height: 44px;
+  }
+
+  .pageSizeSelect {
+    min-height: 44px;
+  }
+}
