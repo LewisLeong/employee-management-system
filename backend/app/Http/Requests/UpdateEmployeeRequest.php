@@ -15,7 +15,7 @@ class UpdateEmployeeRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255'],
+            'email' => ['required', 'email:rfc', 'max:255', 'regex:/^[^@\s]+@[^@\s]+\.[^@\s]+$/'],
             'isActive' => ['required', 'boolean'],
         ];
     }

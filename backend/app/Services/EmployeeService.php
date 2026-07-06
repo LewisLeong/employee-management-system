@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Employee;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Http\Request;
 
 class EmployeeService
 {
@@ -12,11 +13,25 @@ class EmployeeService
         return Employee::query()->find($id);
     }
 
-    public function list(int $perPage = 15): LengthAwarePaginator
+    public function list(Request $request): LengthAwarePaginator
     {
+        $perPage = max(1, min((int) $request->integer('per_page', 15), 100));
+        $page = max(1, (int) $request->integer('page', 1));
+        $status = $request->input('status');
+        $search = trim((string) $request->input('search', ''));
+
         return Employee::query()
+            ->when($status !== null && $status !== '', function ($query) use ($status) {
+                $query->where('is_active', filter_var($status, FILTER_VALIDATE_BOOL, FILTER_NULL_ON_FAILURE));
+            })
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where(function ($subQuery) use ($search) {
+                    $subQuery->where('name', 'like', '%'.$search.'%')
+                        ->orWhere('email', 'like', '%'.$search.'%');
+                });
+            })
             ->orderBy('id')
-            ->paginate($perPage)
+            ->paginate($perPage, ['*'], 'page', $page)
             ->through(fn (Employee $employee) => $this->toApiArray($employee));
     }
 

@@ -35,6 +35,7 @@ The backend should:
 5. Return proper HTTP status codes.
 6. Keep code clean and maintainable using Laravel conventions.
 7. Follow an OOP-friendly structure using Controller, Form Request, Service, and Model.
+8. Use a shared `ApiResponse` DTO for JSON responses.
 
 ---
 
@@ -135,10 +136,23 @@ The backend must provide the following minimum API endpoints:
 ## 7. GET `/employees`
 
 ### 7.1 Description
-Returns the full employee list.
+Returns a paginated employee list.
 
 ### 7.2 Request
-No request body is required.
+The endpoint accepts optional query parameters:
+
+| Parameter | Type | Required | Description |
+|---|---:|---:|---|
+| status | 1 \| 0 | No | Filters employees by active status. Omit for all employees. |
+| per_page | number | No | Number of records per page. Defaults to `15`. |
+| page | number | No | Page number to return. Defaults to `1`. |
+| search | string | No | Searches employee name and email. |
+
+Example:
+
+```text
+/employees?status=1&per_page=10&page=2&search=john
+```
 
 ### 7.3 Success Response
 
@@ -146,14 +160,24 @@ No request body is required.
 
 ```json
 {
-  "employees": [
-    {
-      "id": 1,
-      "name": "John Smith",
-      "email": "john@ayp-group.com",
-      "isActive": true
+  "success": true,
+  "data": {
+    "employees": [
+      {
+        "id": 1,
+        "name": "John Smith",
+        "email": "john@ayp-group.com",
+        "isActive": true
+      }
+    ],
+    "meta": {
+      "currentPage": 1,
+      "perPage": 15,
+      "total": 1,
+      "lastPage": 1
     }
-  ]
+  },
+  "message": null
 }
 ```
 
@@ -163,6 +187,8 @@ No request body is required.
 
 ```json
 {
+  "success": false,
+  "data": null,
   "message": "Unable to retrieve employees."
 }
 ```
@@ -204,13 +230,16 @@ Updates employee details by employee ID.
 
 ```json
 {
-  "employee": {
-    "id": 1,
-    "name": "John Smith",
-    "email": "john@ayp-group.com",
-    "isActive": true
+  "success": true,
+  "data": {
+    "employee": {
+      "id": 1,
+      "name": "John Smith",
+      "email": "john@ayp-group.com",
+      "isActive": true
+    }
   },
-  "message": "Employee updated successfully."
+  "message": null
 }
 ```
 
@@ -222,6 +251,8 @@ Updates employee details by employee ID.
 
 ```json
 {
+  "success": false,
+  "data": null,
   "message": "Employee not found."
 }
 ```
@@ -232,6 +263,8 @@ Updates employee details by employee ID.
 
 ```json
 {
+  "success": false,
+  "data": null,
   "message": "The given data was invalid.",
   "errors": {
     "email": [
@@ -247,6 +280,8 @@ Updates employee details by employee ID.
 
 ```json
 {
+  "success": false,
+  "data": null,
   "message": "Unable to update employee."
 }
 ```
@@ -318,6 +353,28 @@ routes/
 
 ## 11. Backend Error Handling
 
+### 11.1 Shared API Response DTO
+
+All API responses should use the shared `ApiResponse` DTO.
+
+Shape:
+
+```json
+{
+  "success": true,
+  "data": null,
+  "message": null
+}
+```
+
+Behavior:
+
+- `ApiResponse::successResponse(array $data = [], int $status = 200)` returns `success: true`, sets `data`, and leaves `message` as `null`.
+- `ApiResponse::errorResponse(?string $message = null, int $status = 500)` returns `success: false`, sets `message`, and leaves `data` as `null`.
+
+For success responses, `message` is `null`.
+For error responses, `data` is `null`.
+
 The backend should handle:
 
 1. Employee not found.
@@ -372,7 +429,7 @@ DB_PASSWORD=
 
 The backend is considered complete when:
 
-1. `GET /employees` returns a JSON list of employees.
+1. `GET /employees` returns a paginated JSON list of employees.
 2. `PATCH /employees/{id}` updates an employee by ID.
 3. PATCH request validates `name`, `email`, and `isActive`.
 4. Invalid employee ID returns `404`.
@@ -415,5 +472,6 @@ The backend should deliver:
 7. API routes:
    - `GET /employees`
    - `PATCH /employees/{id}`
-8. Proper JSON responses.
-9. Proper error handling.
+8. Shared `ApiResponse` DTO.
+9. Proper JSON responses.
+10. Proper error handling.

@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\DTOs\ApiResponse;
 use App\Http\Requests\UpdateEmployeeRequest;
 use App\Services\EmployeeService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class EmployeeController extends Controller
 {
@@ -12,12 +14,12 @@ class EmployeeController extends Controller
     {
     }
 
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         try {
-            $employees = $this->employeeService->list();
+            $employees = $this->employeeService->list($request);
 
-            return response()->json([
+            return ApiResponse::successResponse([
                 'employees' => $employees->items(),
                 'meta' => [
                     'currentPage' => $employees->currentPage(),
@@ -27,9 +29,7 @@ class EmployeeController extends Controller
                 ],
             ]);
         } catch (\Throwable) {
-            return response()->json([
-                'message' => 'Unable to retrieve employees.',
-            ], 500);
+            return ApiResponse::errorResponse('Unable to retrieve employees.');
         }
     }
 
@@ -39,21 +39,19 @@ class EmployeeController extends Controller
             $employee = $this->employeeService->find($id);
 
             if ($employee === null) {
-                return response()->json([
-                    'message' => 'Employee not found.',
-                ], 404);
+                return ApiResponse::errorResponse('Employee not found.', 404);
+            }
+            if (!$employee->is_active) {
+                return ApiResponse::errorResponse('Cannot update an inactive employee.', 400);
             }
 
             $updatedEmployee = $this->employeeService->update($employee, $request->validated());
 
-            return response()->json([
+            return ApiResponse::successResponse([
                 'employee' => $updatedEmployee,
-                'message' => 'Employee updated successfully.',
             ]);
         } catch (\Throwable) {
-            return response()->json([
-                'message' => 'Unable to update employee.',
-            ], 500);
+            return ApiResponse::errorResponse('Unable to update employee.');
         }
     }
 }
