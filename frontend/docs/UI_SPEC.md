@@ -58,3 +58,7 @@ The modal should contain:
 The Save button should be disabled while the update request is loading.
 
 The close button should be an `X` icon button.
+
+When the user submits a deactivation, the modal should show a confirmation prompt before the save continues.
+
+After a successful save, the modal should briefly show a success message before closing itself.

@@ -39,6 +39,8 @@ The frontend should:
 11. Save updates by sending a PATCH request to the backend API.
 12. Handle loading, empty, validation, and error states.
 13. Keep the UI clean, simple, and easy to use.
+14. Show a confirmation warning when the user submits a deactivation.
+15. Show a brief success message in the modal after a successful save.
 
 ---
 
@@ -270,14 +272,22 @@ When the user clicks `Save`:
 4. Show loading state during submission.
 5. On success:
    - Update the employee row in the table.
-   - Close the modal.
-   - Optionally show a success message.
+   - Show a brief success message in the modal.
+   - Close the modal automatically after the confirmation is shown.
 6. On failure:
    - Keep the modal open.
    - Show only the backend message.
    - Re-enable the Save button.
 
-### 8.6 Cancel Behavior
+### 8.6 Deactivation Confirmation
+
+If the user submits an update that changes `isActive` from `true` to `false`, the frontend should show a confirmation prompt before saving.
+
+The confirmation message should warn that the account cannot be activated back and should ask the user to confirm.
+
+If the user cancels the confirmation, the update should not be saved.
+
+### 8.7 Cancel Behavior
 
 When the user clicks `Cancel`:
 
