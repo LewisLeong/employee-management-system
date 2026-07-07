@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import type { Employee, EmployeeFormState } from "@/types/employee";
 import styles from "./EmployeeUpdateModal.module.css";
 
@@ -12,14 +12,24 @@ export function EmployeeUpdateModal({
   employee: Employee;
   onClose: () => void;
   onSave: (payload: EmployeeFormState) => Promise<void>;
-}) {
+  }) {
   const [form, setForm] = useState<EmployeeFormState>(() => ({
     name: employee.name,
     email: employee.email,
     isActive: employee.isActive,
   }));
   const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (closeTimerRef.current) {
+        clearTimeout(closeTimerRef.current);
+      }
+    };
+  }, []);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -27,7 +37,23 @@ export function EmployeeUpdateModal({
     setIsSaving(true);
 
     try {
+      if (employee.isActive && !form.isActive) {
+        const confirmed = window.confirm("Deactivated account can't be activate back, confirm?");
+
+        if (!confirmed) {
+          setIsSaving(false);
+          return;
+        }
+      }
+
       await onSave(form);
+      setSuccessMessage("Employee updated successfully.");
+      if (closeTimerRef.current) {
+        clearTimeout(closeTimerRef.current);
+      }
+      closeTimerRef.current = setTimeout(() => {
+        onClose();
+      }, 1200);
     } catch (saveError) {
       setError(saveError instanceof Error ? saveError.message : "Update failed.");
       setIsSaving(false);
@@ -76,6 +102,7 @@ export function EmployeeUpdateModal({
               <span className={styles.switchState}>{form.isActive ? "Active" : "Deactivated"}</span>
             </div>
           </div>
+          {successMessage ? <p className={styles.successText}>{successMessage}</p> : null}
           {error ? <p className={styles.errorText}>{error}</p> : null}
           <div className={styles.modalActions}>
             <button className={styles.secondaryButton} type="button" onClick={onClose} disabled={isSaving}>

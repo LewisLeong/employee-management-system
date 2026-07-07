@@ -66,6 +66,12 @@
 .switch input:focus-visible + .switchTrack {
   box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.14);
 }
+.successText {
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(34, 197, 94, 0.12);
+  color: #166534;
+}
 .errorText { color: #b91c1c; }
 .modalActions { display: flex; justify-content: end; gap: 12px; }
 .primaryButton, .secondaryButton, .iconButton { border: 0; border-radius: 999px; font: inherit; cursor: pointer; }

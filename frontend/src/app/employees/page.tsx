@@ -114,7 +114,6 @@ export default function EmployeesPage() {
     setEmployees((current) =>
       current.map((employee) => (employee.id === updated.id ? updated : employee)),
     );
-    setSelectedEmployee(null);
     const refreshed = await fetchEmployees(currentPage, pageSize, search, status);
     setEmployees(refreshed.employees ?? []);
     setMeta(refreshed.meta ?? null);
