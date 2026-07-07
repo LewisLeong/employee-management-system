@@ -7,9 +7,9 @@ This document defines the development rules for the Next.js frontend app.
 The frontend must follow:
 
 ```text
-FRONTEND_PRD.md
+PRD.md
 UI_SPEC.md
-CODE_STYLE.md
+RULES.md
 ```
 
 ---
